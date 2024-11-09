@@ -16,15 +16,16 @@ const GraphComponent = () => {
   };
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center overflow-hidden h-fit">
       <div className="w-2/3 flex justify-center items-center">
         <ForceGraph2D
           graphData={graphData}
           nodeLabel={(node) => `${node.id} (${node.genre})`}
           nodeAutoColorBy="genre"
           linkColor={() => "gray"}
-          linkDirectionalArrowLength={5}
-          linkDirectionalArrowRelPos={1}
+          height={600}
+          linkDirectionalArrowLength={0}
+          linkDirectionalArrowRelPos={0}
           enableZoomInteraction={false}
           enableNodeDrag={false}
         />
