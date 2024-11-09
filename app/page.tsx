@@ -5,7 +5,7 @@ import { User } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-svh">
+    <main className="min-h-svh w-[100vw] overflow-x-hidden">
       <div className="flex container min-h-20 items-center justify-between">
         <h1 className="text-4xl font-bold">SONGZ</h1>
         <div className="flex gap-2">
