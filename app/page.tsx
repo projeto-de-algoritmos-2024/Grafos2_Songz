@@ -1,3 +1,4 @@
+import GraphComponent from "@/components/graph-component";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
@@ -14,6 +15,9 @@ export default function Home() {
         <Button>
           <User size={24} />
         </Button>
+      </div>
+      <div className="mt-10">
+        <GraphComponent />
       </div>
     </main>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Graph } from '../types/graph';
 
-export const useBFS = (graph: Graph) => {
+export const GraphProvider = (graph: Graph) => {
   const [path, setPath] = useState<string[]>([]);
 
   const bfs = (startNode: string, targetNode: string) => {
