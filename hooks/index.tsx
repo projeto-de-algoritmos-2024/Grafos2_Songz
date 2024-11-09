@@ -1,7 +1,18 @@
-import { useState } from 'react';
-import { Graph } from '../types/graph';
+"use client";
+import React, { createContext, useContext, useState } from "react";
+import { Graph } from "../types/graph";
 
-export const GraphProvider = (graph: Graph) => {
+interface GraphContextType {
+  relatedNodes: string[];
+  findRelatedNodes: (startNode: string) => string[];
+}
+
+const GraphContext = createContext<GraphContextType | undefined>(undefined);
+
+export const GraphProvider: React.FC<{
+  graph: Graph;
+  children: React.ReactNode;
+}> = ({ graph, children }) => {
   const [relatedNodes, setRelatedNodes] = useState<string[]>([]);
 
   const findRelatedNodes = (startNode: string) => {
@@ -13,5 +24,17 @@ export const GraphProvider = (graph: Graph) => {
     return neighbors;
   };
 
-  return { relatedNodes, findRelatedNodes };
+  return (
+    <GraphContext.Provider value={{ relatedNodes, findRelatedNodes }}>
+      {children}
+    </GraphContext.Provider>
+  );
+};
+
+export const useGraph = () => {
+  const context = useContext(GraphContext);
+  if (!context) {
+    throw new Error("useGraph must be used within a GraphProvider");
+  }
+  return context;
 };

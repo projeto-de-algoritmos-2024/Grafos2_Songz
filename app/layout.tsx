@@ -1,4 +1,7 @@
+// app/layout.tsx
 import { ThemeProvider } from "@/components/theme-provider";
+import { GraphProvider } from "@/hooks";
+import { mockData } from "@/lib/mocks/songs"; // Import mockData
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -35,7 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <GraphProvider graph={mockData}>{children}</GraphProvider>
         </ThemeProvider>
       </body>
     </html>
