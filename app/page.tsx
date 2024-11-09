@@ -10,11 +10,11 @@ import { useState } from "react";
 
 export default function Home() {
   const { relatedNodes, findRelatedNodes, setRelatedNodes } = useGraph(); // Use useGraph
-  const [selectedNode, setSelectedNode] = useState<string>("");
+  const [searchInput, setSearchInput] = useState<string>("");
 
   const handleSearch = () => {
     setRelatedNodes([]);
-    findRelatedNodes(selectedNode);
+    findRelatedNodes(searchInput);
   };
 
   console.log(relatedNodes);
@@ -26,8 +26,8 @@ export default function Home() {
         <div className="flex gap-2">
           <Input
             className="w-96"
-            value={selectedNode}
-            onChange={(e) => setSelectedNode(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Digite o nome da música"
           />
           <Button variant="default" onClick={handleSearch}>
