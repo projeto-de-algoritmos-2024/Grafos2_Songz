@@ -32,15 +32,10 @@ export const GraphProvider: React.FC<{
     const foundLinks: Link[] = [];
     const neighbors: string[] = [];
 
-    console.log("graph.nodes", graph.nodes);
-    console.log("searchTerm", searchTerm);
-
     // Filtra os nós que contêm o termo de busca (parcial)
     const matchingNodes = graph.nodes.filter((node) =>
       node.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    console.log("matchingNodes", matchingNodes);
 
     // Adiciona cada nó correspondente à fila de busca
     matchingNodes.forEach((node) => {
@@ -49,8 +44,6 @@ export const GraphProvider: React.FC<{
         visited.add(node.id);
         foundNodes.push(node);
       }
-
-      console.log("visited", visited);
 
       // Encontra apenas as conexões diretas dos nós encontrados
       const directLinks = graph.links.filter(

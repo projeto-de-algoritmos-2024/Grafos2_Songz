@@ -15,7 +15,7 @@ export default function Home() {
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
     setRelatedNodes([]);
-    if (searchInputRef.current) {
+    if (searchInputRef.current && searchInputRef.current.value.trim() !== "") {
       findRelatedNodes(searchInputRef.current.value);
     }
   };
