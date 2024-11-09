@@ -6,34 +6,34 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGraph } from "@/hooks";
-import { useState } from "react";
+import { useRef } from "react";
 
 export default function Home() {
-  const { relatedNodes, findRelatedNodes, setRelatedNodes } = useGraph(); // Use useGraph
-  const [searchInput, setSearchInput] = useState<string>("");
+  const { relatedNodes, findRelatedNodes, setRelatedNodes } = useGraph();
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSearch = () => {
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
     setRelatedNodes([]);
-    findRelatedNodes(searchInput);
+    if (searchInputRef.current) {
+      findRelatedNodes(searchInputRef.current.value);
+    }
   };
-
-  console.log(relatedNodes);
 
   return (
     <main className="min-h-svh w-[100vw] overflow-x-hidden">
       <div className="flex container min-h-20 items-center justify-between">
         <h1 className="text-4xl font-bold">SONGZ</h1>
-        <div className="flex gap-2">
+        <form onSubmit={handleSearch} className="flex gap-2">
           <Input
             className="w-96"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            ref={searchInputRef}
             placeholder="Digite o nome da música"
           />
-          <Button variant="default" onClick={handleSearch}>
+          <Button variant="default" type="submit">
             Buscar
           </Button>
-        </div>
+        </form>
         <ModeToggle />
       </div>
       <div className="text-center">
