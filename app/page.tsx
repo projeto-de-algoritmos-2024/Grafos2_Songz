@@ -2,10 +2,10 @@
 "use client";
 
 import GraphComponent from "@/components/graph-component";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGraph } from "@/hooks";
-import { User } from "lucide-react";
 import { useState } from "react";
 
 export default function Home() {
@@ -34,9 +34,7 @@ export default function Home() {
             Buscar
           </Button>
         </div>
-        <Button>
-          <User size={24} />
-        </Button>
+        <ModeToggle />
       </div>
       <div className="text-center">
         {relatedNodes.length > 0 ? (
