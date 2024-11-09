@@ -9,12 +9,11 @@ import { useGraph } from "@/hooks";
 import { useRef } from "react";
 
 export default function Home() {
-  const { relatedNodes, findRelatedNodes, setRelatedNodes } = useGraph();
+  const { relatedNodes, findRelatedNodes, matchingNodes } = useGraph();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    setRelatedNodes([]);
     if (searchInputRef.current && searchInputRef.current.value.trim() !== "") {
       findRelatedNodes(searchInputRef.current.value);
     }
@@ -36,20 +35,27 @@ export default function Home() {
         </form>
         <ModeToggle />
       </div>
-      <div className="text-center">
-        {relatedNodes.length > 0 ? (
-          <ul>
-            {relatedNodes.map((node) => (
-              <li key={node}>{node}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>Nenhuma música relacionada encontrada.</p>
-        )}
-      </div>
-      {relatedNodes.length > 0 && (
-        <div className="mt-10">
-          <GraphComponent />
+      {relatedNodes.length === 0 || matchingNodes.length === 0 ? (
+        <div className="text-center">Nenhuma música econtrada</div>
+      ) : (
+        <div className="flex w-full container mt-10">
+          <div className="flex flex-col w-1/2 gap-10 ">
+            <h2 className="text-3xl font-bold">Resultado da pesquisa</h2>
+            <ul>
+              {matchingNodes.map((node) => (
+                <li key={node.id}>{node.id}</li>
+              ))}
+            </ul>
+            <h2 className="text-3xl font-bold">Recomendações</h2>
+            <ul>
+              {relatedNodes.map((node) => (
+                <li key={node}>{node}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="w-1/2">
+            <GraphComponent />
+          </div>
         </div>
       )}
     </main>

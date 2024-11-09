@@ -5,7 +5,7 @@ import { Graph, Link, Node } from "../types/graph";
 
 interface GraphContextType {
   relatedNodes: string[];
-  setRelatedNodes: React.Dispatch<React.SetStateAction<string[]>>;
+  matchingNodes: Node[];
   path: { nodes: Node[]; links: Link[] };
   findRelatedNodes: (searchTerm: string) => string[];
 }
@@ -17,6 +17,7 @@ export const GraphProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ graph, children }) => {
   const [relatedNodes, setRelatedNodes] = useState<string[]>([]);
+  const [matchingNodes, setMatchingNodes] = useState<Node[]>([]);
   const [path, setPath] = useState<{ nodes: Node[]; links: Link[] }>({
     nodes: [],
     links: [],
@@ -44,6 +45,8 @@ export const GraphProvider: React.FC<{
         visited.add(node.id);
         foundNodes.push(node);
       }
+
+      setMatchingNodes(matchingNodes);
 
       // Encontra apenas as conexões diretas dos nós encontrados
       const directLinks = graph.links.filter(
@@ -80,7 +83,7 @@ export const GraphProvider: React.FC<{
 
   return (
     <GraphContext.Provider
-      value={{ relatedNodes, path, findRelatedNodes, setRelatedNodes }}
+      value={{ relatedNodes, path, findRelatedNodes, matchingNodes }}
     >
       {children}
     </GraphContext.Provider>
