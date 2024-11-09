@@ -1,6 +1,6 @@
 "use client";
 
-import { mockData } from "@/lib/mocks/songs";
+import { useGraph } from "@/hooks";
 import dynamic from "next/dynamic";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
@@ -8,11 +8,13 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 });
 
 const GraphComponent = () => {
+  const { path } = useGraph();
+
   return (
     <div className="flex w-full justify-center">
       <div className="w-2/3 flex justify-center items-center">
         <ForceGraph2D
-          graphData={mockData}
+          graphData={path}
           nodeLabel={(node) => `${node.id} (${node.genre})`}
           nodeAutoColorBy="genre"
           linkColor={() => "gray"}

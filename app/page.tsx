@@ -9,12 +9,15 @@ import { User } from "lucide-react";
 import { useState } from "react";
 
 export default function Home() {
-  const { relatedNodes, findRelatedNodes } = useGraph(); // Use useGraph
+  const { relatedNodes, findRelatedNodes, setRelatedNodes } = useGraph(); // Use useGraph
   const [selectedNode, setSelectedNode] = useState<string>("");
 
   const handleSearch = () => {
+    setRelatedNodes([]);
     findRelatedNodes(selectedNode);
   };
+
+  console.log(relatedNodes);
 
   return (
     <main className="min-h-svh w-[100vw] overflow-x-hidden">
@@ -46,9 +49,11 @@ export default function Home() {
           <p>Nenhuma música relacionada encontrada.</p>
         )}
       </div>
-      <div className="mt-10">
-        <GraphComponent />
-      </div>
+      {relatedNodes.length > 0 && (
+        <div className="mt-10">
+          <GraphComponent />
+        </div>
+      )}
     </main>
   );
 }
