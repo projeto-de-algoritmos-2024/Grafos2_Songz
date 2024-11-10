@@ -39,7 +39,7 @@ export default function Home() {
         <div className="text-center">Nenhuma música econtrada</div>
       ) : (
         <div className="flex w-full container mt-10">
-          <div className="flex flex-col w-1/2 gap-10 ">
+          <div className="flex flex-col w-1/3 gap-10 ">
             <h2 className="text-3xl font-bold">Resultado da pesquisa</h2>
             <ul>
               {matchingNodes.map((node) => (
@@ -53,7 +53,7 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="w-1/2">
+          <div className="w-2/3">
             <GraphComponent />
           </div>
         </div>
