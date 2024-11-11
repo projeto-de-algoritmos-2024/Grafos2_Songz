@@ -45,3 +45,7 @@ O projeto estará disponível em `http://localhost:3000/`.
 2. Clique no botão Buscar.
 3. O grafo exibirá a música pesquisada e suas conexões com outras músicas relacionadas.
 4. Você pode clicar nos nós para destacar conexões ou explorar o grafo utilizando zoom e arrastando os elementos.
+
+## Outros
+
+[Link para apresentação](https://youtu.be/XZlsR73cfxo)
