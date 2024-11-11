@@ -28,7 +28,7 @@ export const GraphProvider: React.FC<{
     setPath({ nodes: [], links: [] });
 
     const visited = new Set<string>();
-    const queue: [Node, number][] = []; // Adiciona camada como segundo item do array
+    const queue: [Node, number][] = [];
     const foundNodes: Node[] = [];
     const foundLinks: Link[] = [];
     const neighborsByLayer: { [layer: number]: string[] } = {}; // Armazena nós por camada
@@ -42,7 +42,7 @@ export const GraphProvider: React.FC<{
     initialNodes.forEach((node) => {
       if (!visited.has(node.id)) {
         visited.add(node.id);
-        queue.push([node, 0]); // Define camada inicial como 0
+        queue.push([node, 0]);
         foundNodes.push(node);
       }
     });
@@ -78,10 +78,9 @@ export const GraphProvider: React.FC<{
       });
     }
 
-    console.log("neighborsByLayer:", neighborsByLayer); // Adicione este log para verificar
     setRelatedNodes(Object.values(neighborsByLayer).flat());
     setPath({ nodes: foundNodes, links: foundLinks });
-    return neighborsByLayer; // Retorna nós organizados por camada
+    return neighborsByLayer;
   };
 
   return (
