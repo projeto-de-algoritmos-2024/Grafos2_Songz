@@ -94,7 +94,16 @@ export default function Home() {
         <ModeToggle />
       </div>
       {relatedNodes.length === 0 || matchingNodes.length === 0 ? (
-        <div className="text-center">Nenhuma música encontrada</div>
+        <div className="text-center">
+          <p className="mt-10">
+            Digite o nome de uma música para começar, não precisa ser o nome
+            completo
+          </p>
+
+          <h2 className="text-3xl font-bold mt-10">
+            Nenhuma música encontrada
+          </h2>
+        </div>
       ) : (
         <div className="flex w-full container mt-10">
           <div className="flex flex-col w-1/3 gap-10">
