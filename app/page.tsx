@@ -6,22 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGraph } from "@/hooks";
 import { mockData } from "@/lib/mocks/songs";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Home() {
-  const { relatedNodes, findRelatedNodes, matchingNodes } = useGraph();
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const { findRelatedNodes, matchingNodes } = useGraph();
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [layeredRecommendations, setLayeredRecommendations] = useState<{
+    [layer: number]: string[];
+  }>({});
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
     setAutocompleteOptions([]);
     if (searchInputRef.current && searchInputRef.current.value.trim() !== "") {
-      findRelatedNodes(searchInputRef.current.value);
+      const layers = findRelatedNodes(searchInputRef.current.value);
+      console.log("Layers returned:", layers); // Verifique se `layers` está preenchido
+      setLayeredRecommendations(layers);
     }
   };
+
+  console.log(layeredRecommendations);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -44,19 +51,6 @@ export default function Home() {
     }
     findRelatedNodes(option);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (formRef.current && !formRef.current.contains(event.target as Node)) {
-        setAutocompleteOptions([]);
-      }
-    };
-
-    document.addEventListener("mouseup", handleClickOutside);
-    return () => {
-      document.removeEventListener("mouseup", handleClickOutside);
-    };
-  }, []);
 
   return (
     <main className="min-h-svh w-[100vw] overflow-x-hidden">
@@ -93,13 +87,12 @@ export default function Home() {
         </form>
         <ModeToggle />
       </div>
-      {relatedNodes.length === 0 || matchingNodes.length === 0 ? (
+      {matchingNodes.length === 0 ? (
         <div className="text-center">
           <p className="mt-10">
             Digite o nome de uma música para começar, não precisa ser o nome
             completo
           </p>
-
           <h2 className="text-3xl font-bold mt-10">
             Nenhuma música encontrada
           </h2>
@@ -113,12 +106,24 @@ export default function Home() {
                 <li key={node.id}>{node.id}</li>
               ))}
             </ul>
-            <h2 className="text-3xl font-bold">Recomendações</h2>
-            <ul className="max-h-[30vh] overflow-auto">
-              {relatedNodes.map((node) => (
-                <li key={node}>{node}</li>
-              ))}
-            </ul>
+
+            <h2 className="text-3xl font-bold 0">Recomendações</h2>
+            <div className="max-h-[30vh] overflow-auto">
+              {Object.entries(layeredRecommendations).map(([layer, nodes]) =>
+                layer === "0" ? null : (
+                  <div key={layer}>
+                    <h3 className="text-2xl font-semibold my-4">
+                      Camada {layer}
+                    </h3>
+                    <ul>
+                      {nodes.map((node) => (
+                        <li key={node}>{node}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              )}
+            </div>
           </div>
           <div className="w-2/3">
             <GraphComponent />

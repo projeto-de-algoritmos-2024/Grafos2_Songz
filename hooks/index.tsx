@@ -7,7 +7,7 @@ interface GraphContextType {
   relatedNodes: string[];
   matchingNodes: Node[];
   path: { nodes: Node[]; links: Link[] };
-  findRelatedNodes: (searchTerm: string) => string[];
+  findRelatedNodes: (searchTerm: string) => { [layer: number]: string[] };
 }
 
 const GraphContext = createContext<GraphContextType | undefined>(undefined);
@@ -24,61 +24,64 @@ export const GraphProvider: React.FC<{
   });
 
   const findRelatedNodes = (searchTerm: string) => {
-    // Reset estado para cada nova busca
     setRelatedNodes([]);
     setPath({ nodes: [], links: [] });
 
     const visited = new Set<string>();
+    const queue: [Node, number][] = []; // Adiciona camada como segundo item do array
     const foundNodes: Node[] = [];
     const foundLinks: Link[] = [];
-    const neighbors: string[] = [];
+    const neighborsByLayer: { [layer: number]: string[] } = {}; // Armazena nós por camada
 
-    // Filtra os nós que contêm o termo de busca (parcial)
-    const matchingNodes = graph.nodes.filter((node) =>
+    const initialNodes = graph.nodes.filter((node) =>
       node.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Adiciona cada nó correspondente à fila de busca
-    matchingNodes.forEach((node) => {
-      // Adiciona o nó inicial ao caminho, se ainda não estiver incluído
+    setMatchingNodes(initialNodes);
+
+    initialNodes.forEach((node) => {
       if (!visited.has(node.id)) {
         visited.add(node.id);
+        queue.push([node, 0]); // Define camada inicial como 0
         foundNodes.push(node);
       }
+    });
 
-      setMatchingNodes(matchingNodes);
+    while (queue.length > 0) {
+      const [currentNode, layer] = queue.shift()!;
 
-      // Encontra apenas as conexões diretas dos nós encontrados
+      if (!neighborsByLayer[layer]) {
+        neighborsByLayer[layer] = [];
+      }
+      neighborsByLayer[layer].push(currentNode.id);
+
       const directLinks = graph.links.filter(
         (link) =>
-          (link.source === node.id || link.target === node.id) &&
-          (matchingNodes.some((n) => n.id === link.source) ||
-            matchingNodes.some((n) => n.id === link.target))
+          link.source === currentNode.id || link.target === currentNode.id
       );
 
       directLinks.forEach((link) => {
-        const targetNode = link.source === node.id ? link.target : link.source;
+        const targetNodeId =
+          link.source === currentNode.id ? link.target : link.source;
 
-        // Adiciona ao caminho se o nó alvo não foi visitado e faz parte das recomendações
-        if (!visited.has(targetNode)) {
-          visited.add(targetNode);
-          neighbors.push(targetNode);
+        if (!visited.has(targetNodeId)) {
+          visited.add(targetNodeId);
 
-          const targetNodeData = graph.nodes.find((n) => n.id === targetNode);
+          const targetNodeData = graph.nodes.find((n) => n.id === targetNodeId);
           if (targetNodeData) {
             foundNodes.push(targetNodeData);
+            queue.push([targetNodeData, layer + 1]);
           }
 
-          // Adiciona o link ao caminho
           foundLinks.push(link);
         }
       });
-    });
+    }
 
-    // Atualiza o estado com os nós relacionados e o caminho
-    setRelatedNodes(neighbors);
+    console.log("neighborsByLayer:", neighborsByLayer); // Adicione este log para verificar
+    setRelatedNodes(Object.values(neighborsByLayer).flat());
     setPath({ nodes: foundNodes, links: foundLinks });
-    return neighbors;
+    return neighborsByLayer; // Retorna nós organizados por camada
   };
 
   return (
