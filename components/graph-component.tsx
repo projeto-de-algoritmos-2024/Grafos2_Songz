@@ -20,7 +20,7 @@ const GraphComponent = () => {
       <div className="w-2/3 flex justify-center items-center">
         <ForceGraph2D
           graphData={graphData}
-          nodeLabel={(node) => `${node.id} (${node.genre})`}
+          nodeLabel={(node) => `${node.id} (${node.genre}) - ${node.artist}`}
           nodeAutoColorBy="genre"
           linkColor={() => "gray"}
           height={600}
