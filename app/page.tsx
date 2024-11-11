@@ -28,8 +28,6 @@ export default function Home() {
     }
   };
 
-  console.log(layeredRecommendations);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
@@ -50,6 +48,7 @@ export default function Home() {
       searchInputRef.current.value = option;
     }
     findRelatedNodes(option);
+    handleSearch(new Event("submit") as unknown as React.FormEvent);
   };
 
   return (
