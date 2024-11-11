@@ -106,15 +106,15 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex w-full container mt-10">
-          <div className="flex flex-col w-1/3 gap-10">
+          <div className="flex flex-col w-1/3 gap-10 ">
             <h2 className="text-3xl font-bold">Resultado da pesquisa</h2>
-            <ul>
+            <ul className="max-h-[30vh] overflow-auto">
               {matchingNodes.map((node) => (
                 <li key={node.id}>{node.id}</li>
               ))}
             </ul>
             <h2 className="text-3xl font-bold">Recomendações</h2>
-            <ul>
+            <ul className="max-h-[30vh] overflow-auto">
               {relatedNodes.map((node) => (
                 <li key={node}>{node}</li>
               ))}
