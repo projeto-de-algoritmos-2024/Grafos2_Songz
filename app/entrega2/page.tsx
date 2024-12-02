@@ -1,7 +1,6 @@
 "use client";
 
 import GraphComponent from "@/components/graph-component";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGraph } from "@/hooks";
@@ -53,8 +52,8 @@ export default function Entrega2() {
 
   return (
     <main className="min-h-svh w-[100vw] overflow-x-hidden">
-      <div className="flex container min-h-20 items-center justify-between">
-        <h1 className="text-4xl font-bold">SONGZ</h1>
+      <div className="flex flex-col container min-h-20 items-center gap-10">
+        <h1 className="text-4xl font-bold">Entrega 2</h1>
         <form
           onSubmit={handleSearch}
           ref={formRef}
@@ -84,7 +83,6 @@ export default function Entrega2() {
             </ul>
           )}
         </form>
-        <ModeToggle />
       </div>
       {matchingNodes.length === 0 ? (
         <div className="text-center">
