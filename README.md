@@ -1,6 +1,6 @@
 # Songz
 
-**Número da Lista**: 1<br>
+**Número da Lista**: 2<br>
 **Conteúdo da Disciplina**: Grafos 2<br>
 
 ## Alunos
@@ -18,11 +18,11 @@ O usuário pode buscar por músicas, e o sistema exibe as músicas relacionadas 
 ### **Tela inicial**:
 ![Tela inicial](./images/songz1.png)
 
-### **Busca por música**:
-![Busca por música](./images/songz2.png)
+### **Escolhendo músicas**:
+![Escolhendo músicas](./images/songz2.png)
 
-### **Tema escuro**:
-![Tema escuro](./images/songz3.png)
+### **Grafo mostrando caminhos**:
+![Grafo](./images/songz3.png)
 
 ## Instalação 
 **Linguagem**: Javascript<br>
@@ -41,7 +41,7 @@ O projeto estará disponível em `http://localhost:3000/`.
 
 ## Uso 
 
-1. No campo de busca, insira o nome de uma música ou parte dele.
+1. Nos campos de buscas, insira os nomes das música.
 2. Clique no botão Buscar.
 3. O grafo exibirá a música pesquisada e suas conexões com outras músicas relacionadas.
 4. Você pode clicar nos nós para destacar conexões ou explorar o grafo utilizando zoom e arrastando os elementos.
