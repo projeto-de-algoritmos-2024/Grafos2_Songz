@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/header";
+import { DijkstraProvider } from "@/hooks/dijkstra";
+import { mockData2 } from "@/lib/mocks/songs2";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,7 +43,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="py-20">
-            <GraphProvider graph={mockData}>{children}</GraphProvider>
+            <DijkstraProvider graph={mockData2}>
+              <GraphProvider graph={mockData}>{children}</GraphProvider>
+            </DijkstraProvider>
           </main>
         </ThemeProvider>
       </body>

@@ -8,6 +8,7 @@ export type Node = {
 export type Link = {
   source: string;
   target: string;
+  weight?: number;
 };
 
 export type Graph = {

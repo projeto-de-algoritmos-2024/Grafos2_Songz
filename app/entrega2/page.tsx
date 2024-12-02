@@ -1,132 +1,140 @@
+// Entrega2.tsx
 "use client";
 
-import GraphComponent from "@/components/graph-component";
+import GraphComponent2 from "@/components/graph-component2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useGraph } from "@/hooks";
+import { useDijkstra } from "@/hooks/dijkstra";
 import { mockData } from "@/lib/mocks/songs";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export default function Entrega2() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const { findRelatedNodes, matchingNodes } = useGraph();
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [layeredRecommendations, setLayeredRecommendations] = useState<{
-    [layer: number]: string[];
-  }>({});
+  const { findShortestPath, findAllPaths, shortestPath, allPaths } =
+    useDijkstra();
+  const [startSong, setStartSong] = useState("");
+  const [endSong, setEndSong] = useState("");
+  const [autocompleteOptionsStart, setAutocompleteOptionsStart] = useState<
+    string[]
+  >([]);
+  const [autocompleteOptionsEnd, setAutocompleteOptionsEnd] = useState<
+    string[]
+  >([]);
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    setAutocompleteOptions([]);
-    if (searchInputRef.current && searchInputRef.current.value.trim() !== "") {
-      const layers = findRelatedNodes(searchInputRef.current.value);
-      console.log("Layers returned:", layers); // Verifique se `layers` está preenchido
-      setLayeredRecommendations(layers);
+    if (startSong.trim() !== "" && endSong.trim() !== "") {
+      findAllPaths(startSong, endSong);
+      findShortestPath(startSong, endSong);
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStartInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = event.target.value;
-    setInputValue(value);
+    setStartSong(value);
     if (value.trim() === "") {
-      setAutocompleteOptions([]);
+      setAutocompleteOptionsStart([]);
     } else {
       const filteredOptions = mockData.nodes
         .filter((node) => node.id.toLowerCase().includes(value.toLowerCase()))
         .map((node) => node.id);
-      setAutocompleteOptions(filteredOptions);
+      setAutocompleteOptionsStart(filteredOptions);
     }
   };
 
-  const handleOptionClick = (option: string) => {
-    setInputValue(option);
-    setAutocompleteOptions([]);
-    if (searchInputRef.current) {
-      searchInputRef.current.value = option;
+  const handleEndInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setEndSong(value);
+    if (value.trim() === "") {
+      setAutocompleteOptionsEnd([]);
+    } else {
+      const filteredOptions = mockData.nodes
+        .filter((node) => node.id.toLowerCase().includes(value.toLowerCase()))
+        .map((node) => node.id);
+      setAutocompleteOptionsEnd(filteredOptions);
     }
-    findRelatedNodes(option);
-    handleSearch(new Event("submit") as unknown as React.FormEvent);
+  };
+
+  const handleOptionClickStart = (option: string) => {
+    setStartSong(option);
+    setAutocompleteOptionsStart([]);
+  };
+
+  const handleOptionClickEnd = (option: string) => {
+    setEndSong(option);
+    setAutocompleteOptionsEnd([]);
   };
 
   return (
     <main className="min-h-svh w-[100vw] overflow-x-hidden">
       <div className="flex flex-col container min-h-20 items-center gap-10">
         <h1 className="text-4xl font-bold">Entrega 2</h1>
-        <form
-          onSubmit={handleSearch}
-          ref={formRef}
-          className="flex gap-2 relative"
-        >
-          <Input
-            className="w-96"
-            ref={searchInputRef}
-            placeholder="Digite o nome da música"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
+        <form onSubmit={handleSearch} className="flex flex-col gap-4 relative">
+          <div className="flex gap-2">
+            <Input
+              className="w-96"
+              placeholder="Digite a música de início"
+              value={startSong}
+              onChange={handleStartInputChange}
+            />
+            {autocompleteOptionsStart.length > 0 && (
+              <ul className="absolute top-full mt-1 w-full bg-card border border-gray-300 z-10 max-h-[70vh] overflow-auto">
+                {autocompleteOptionsStart.map((option) => (
+                  <li
+                    key={option}
+                    className="px-4 py-2 hover:bg-gray-900 cursor-pointer"
+                    onClick={() => handleOptionClickStart(option)}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Input
+              className="w-96"
+              placeholder="Digite a música de destino"
+              value={endSong}
+              onChange={handleEndInputChange}
+            />
+            {autocompleteOptionsEnd.length > 0 && (
+              <ul className="absolute top-full mt-1 w-full bg-card border border-gray-300 z-10 max-h-[70vh] overflow-auto">
+                {autocompleteOptionsEnd.map((option) => (
+                  <li
+                    key={option}
+                    className="px-4 py-2 hover:bg-gray-900 cursor-pointer"
+                    onClick={() => handleOptionClickEnd(option)}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <Button variant="default" type="submit">
             Buscar
           </Button>
-          {autocompleteOptions.length > 0 && (
-            <ul className="absolute top-full mt-1 w-full bg-card border border-gray-300 z-10 max-h-[70vh] overflow-auto">
-              {autocompleteOptions.map((option) => (
-                <li
-                  key={option}
-                  className="px-4 py-2 hover:bg-gray-900 cursor-pointer"
-                  onClick={() => handleOptionClick(option)}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
-          )}
         </form>
       </div>
-      {matchingNodes.length === 0 ? (
-        <div className="text-center">
-          <p className="mt-10">
-            Digite o nome de uma música para começar, não precisa ser o nome
-            completo
-          </p>
-          <h2 className="text-3xl font-bold mt-10">
-            Nenhuma música encontrada
-          </h2>
-        </div>
-      ) : (
-        <div className="flex w-full container mt-10">
-          <div className="flex flex-col w-1/3 gap-10 ">
-            <h2 className="text-3xl font-bold">Resultado da pesquisa</h2>
-            <ul className="max-h-[30vh] overflow-auto">
-              {matchingNodes.map((node) => (
-                <li key={node.id}>{node.id}</li>
-              ))}
-            </ul>
-
-            <h2 className="text-3xl font-bold 0">Recomendações</h2>
-            <div className="max-h-[30vh] overflow-auto">
-              {Object.entries(layeredRecommendations).map(([layer, nodes]) =>
-                layer === "0" ? null : (
-                  <div key={layer}>
-                    <h3 className="text-2xl font-semibold my-4">
-                      Camada {layer}
-                    </h3>
-                    <ul>
-                      {nodes.map((node) => (
-                        <li key={node}>{node}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-          <div className="w-2/3">
-            <GraphComponent />
-          </div>
+      {allPaths.length > 0 && (
+        <div className="flex flex-col items-center mt-10">
+          <h2 className="text-3xl font-bold">Todos os Caminhos Encontrados</h2>
+          <ul className="mt-4 list-disc">
+            {allPaths.map((path, index) => (
+              <li key={index}>{path.join(" -> ")}</li>
+            ))}
+          </ul>
         </div>
       )}
+      {shortestPath && (
+        <div className="flex flex-col items-center mt-10">
+          <h2 className="text-3xl font-bold">Menor Caminho Encontrado</h2>
+          <p>{shortestPath.join(" -> ")}</p>
+        </div>
+      )}
+      <GraphComponent2 />
     </main>
   );
 }
