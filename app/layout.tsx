@@ -5,6 +5,7 @@ import { mockData } from "@/lib/mocks/songs"; // Import mockData
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Header from "@/components/header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,13 +33,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
+        <Header />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <GraphProvider graph={mockData}>{children}</GraphProvider>
+          <main className="py-20">
+            <GraphProvider graph={mockData}>{children}</GraphProvider>
+          </main>
         </ThemeProvider>
       </body>
     </html>
