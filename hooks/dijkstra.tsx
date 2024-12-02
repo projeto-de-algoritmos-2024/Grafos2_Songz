@@ -1,4 +1,3 @@
-// useGraph.ts
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
@@ -10,6 +9,70 @@ interface GraphContextType {
   path: { nodes: Node[]; links: Link[] };
   shortestPath: string[] | null;
   allPaths: string[][];
+}
+
+class MinHeap {
+  private heap: { id: string; distance: number }[] = [];
+
+  private swap(i: number, j: number) {
+    [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]];
+  }
+
+  private bubbleUp(index: number) {
+    const parentIndex = Math.floor((index - 1) / 2);
+    if (
+      parentIndex >= 0 &&
+      this.heap[parentIndex].distance > this.heap[index].distance
+    ) {
+      this.swap(parentIndex, index);
+      this.bubbleUp(parentIndex);
+    }
+  }
+
+  private bubbleDown(index: number) {
+    const leftChildIndex = 2 * index + 1;
+    const rightChildIndex = 2 * index + 2;
+    let smallest = index;
+
+    if (
+      leftChildIndex < this.heap.length &&
+      this.heap[leftChildIndex].distance < this.heap[smallest].distance
+    ) {
+      smallest = leftChildIndex;
+    }
+
+    if (
+      rightChildIndex < this.heap.length &&
+      this.heap[rightChildIndex].distance < this.heap[smallest].distance
+    ) {
+      smallest = rightChildIndex;
+    }
+
+    if (smallest !== index) {
+      this.swap(smallest, index);
+      this.bubbleDown(smallest);
+    }
+  }
+
+  public insert(id: string, distance: number) {
+    this.heap.push({ id, distance });
+    this.bubbleUp(this.heap.length - 1);
+  }
+
+  public extractMin(): { id: string; distance: number } | null {
+    if (this.heap.length === 0) return null;
+    const min = this.heap[0];
+    const end = this.heap.pop();
+    if (this.heap.length > 0 && end) {
+      this.heap[0] = end;
+      this.bubbleDown(0);
+    }
+    return min;
+  }
+
+  public isEmpty(): boolean {
+    return this.heap.length === 0;
+  }
 }
 
 const DijkstraContext = createContext<GraphContextType | undefined>(undefined);
@@ -48,7 +111,7 @@ export const DijkstraProvider: React.FC<{
     return adjacencyList;
   };
 
-  // Dijkstra's algorithm for shortest path
+  // Dijkstra's algorithm using a Min-Heap for shortest path
   const dijkstra = (
     graph: Graph,
     startId: string,
@@ -57,33 +120,22 @@ export const DijkstraProvider: React.FC<{
     const adjacencyList = buildAdjacencyList(graph);
     const distances: { [key: string]: number } = {};
     const previous: { [key: string]: string | null } = {};
-    const queue: Set<string> = new Set();
+    const heap = new MinHeap();
 
     graph.nodes.forEach((node) => {
       distances[node.id] = Infinity;
       previous[node.id] = null;
-      queue.add(node.id);
+      heap.insert(node.id, distances[node.id]);
     });
 
     distances[startId] = 0;
+    heap.insert(startId, 0);
 
-    while (queue.size > 0) {
-      let currentNodeId: string | null = null;
-      let minDistance = Infinity;
+    while (!heap.isEmpty()) {
+      const current = heap.extractMin();
+      if (!current) break;
 
-      for (const nodeId of queue) {
-        if (distances[nodeId] < minDistance) {
-          minDistance = distances[nodeId];
-          currentNodeId = nodeId;
-        }
-      }
-
-      if (currentNodeId === null) {
-        break;
-      }
-
-      queue.delete(currentNodeId);
-
+      const currentNodeId = current.id;
       if (currentNodeId === endId) {
         const path = [];
         let curr = endId;
@@ -96,12 +148,11 @@ export const DijkstraProvider: React.FC<{
 
       const neighbors = adjacencyList.get(currentNodeId) || [];
       for (const neighbor of neighbors) {
-        if (!queue.has(neighbor.node.id)) continue;
-
         const alt = distances[currentNodeId] + neighbor.weight;
         if (alt < distances[neighbor.node.id]) {
           distances[neighbor.node.id] = alt;
           previous[neighbor.node.id] = currentNodeId;
+          heap.insert(neighbor.node.id, alt);
         }
       }
     }

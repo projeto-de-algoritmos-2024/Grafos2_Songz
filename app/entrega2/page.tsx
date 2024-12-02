@@ -129,7 +129,7 @@ export default function Entrega2() {
         </div>
       )}
       {shortestPath && (
-        <div className="flex flex-col items-center mt-10">
+        <div className="flex flex-col items-center mt-10 mb-20">
           <h2 className="text-3xl font-bold">Menor Caminho Encontrado</h2>
           <p>{shortestPath.join(" -> ")}</p>
         </div>
