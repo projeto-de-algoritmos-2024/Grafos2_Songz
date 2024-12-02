@@ -1,7 +1,7 @@
 # Songz
 
 **Número da Lista**: 1<br>
-**Conteúdo da Disciplina**: Grafos 1<br>
+**Conteúdo da Disciplina**: Grafos 2<br>
 
 ## Alunos
 | Matrícula | Aluno           |
@@ -48,4 +48,4 @@ O projeto estará disponível em `http://localhost:3000/`.
 
 ## Outros
 
-[Link para apresentação](https://youtu.be/XZlsR73cfxo)
+[Link para apresentação](https://youtu.be/J0KivVF_3kc?si=ACgStD9M8_o1Kyog)
