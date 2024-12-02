@@ -10,8 +10,7 @@
 | 211061350 | Alexandre de Santana Beck |
 
 ## Sobre 
-Songz é um projeto desenvolvido para a disciplina de Projeto de Algoritmos, com o objetivo de explorar conceitos de teoria dos grafos aplicados a um sistema de recomendação de músicas. Utilizamos grafos para representar relações entre músicas, como conexões baseadas em gêneros musicais e colaborações entre artistas.
-O usuário pode buscar por músicas, e o sistema exibe as músicas relacionadas visualmente como um grafo interativo.
+Songz é um projeto desenvolvido para a disciplina de Projeto de Algoritmos, com o objetivo de explorar conceitos de teoria dos grafos aplicados para exibir caminhos entre músicas com base nos pesos das conexões. O sistema utiliza grafos para representar relações entre músicas, como conexões baseadas em gêneros musicais e colaborações entre artistas. O usuário insere duas músicas, e o sistema encontra os caminhos entre elas, exibindo-os visualmente como um grafo interativo, destacando as conexões ponderadas.
 
 ## Screenshots
 
